@@ -2,14 +2,13 @@ package permissions.logic;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.Permissions;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,37 +16,23 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import lombok.experimental.Helper;
+
 /**
  * @author r-senda
  *
  */
 public class ExcelWriter {
 
-	private static String[] columns = { "Name", "Email", "Date Of Birth", "Salary" };
+	private static String[] columns = { "Folder Name", "Sub-folder Name", "Name of Account"};
 	private static List<Permissions> permissions = new ArrayList<>();
-
-	// Initializing employees data to insert into the excel file
-	static {
-		Calendar dateOfBirth = Calendar.getInstance();
-		dateOfBirth.set(1992, 7, 21);
-		permissions.add(new Permissions("Rajeev Singh", "rajeev@example.com", dateOfBirth.getTime(), 1200000.0));
-
-		dateOfBirth.set(1965, 10, 15);
-		permissions.add(new Permissions("Thomas cook", "thomas@example.com", dateOfBirth.getTime(), 1500000.0));
-
-		dateOfBirth.set(1987, 4, 18);
-		permissions.add(new Permissions("Steve Maiden", "steve@example.com", dateOfBirth.getTime(), 1800000.0));
-	}
+	
 
 	public static void main(String[] args) throws IOException, InvalidFormatException {
+		
+		
 		// Create a Workbook
 		Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
-
-		/*
-		 * CreationHelper helps us create instances of various things like DataFormat,
-		 * Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way
-		 */
-		CreationHelper createHelper = workbook.getCreationHelper();
 
 		// Create a Sheet
 		Sheet sheet = workbook.createSheet("Employee");
@@ -72,24 +57,19 @@ public class ExcelWriter {
 			cell.setCellStyle(headerCellStyle);
 		}
 
-		// Create Cell Style for formatting Date
-		CellStyle dateCellStyle = workbook.createCellStyle();
-		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
 
 		// Create Other rows and cells with employees data
 		int rowNum = 1;
 		for (Permissions element : permissions) {
 			Row row = sheet.createRow(rowNum++);
 
-			row.createCell(0).setCellValue(element.name);
+			row.createCell(0).setCellValue("Test Folder name");
 
-			row.createCell(1).setCellValue(element.email);
+			row.createCell(1).setCellValue("Test SubFolder name");
 
-			Cell dateOfBirthCell = row.createCell(2);
-			dateOfBirthCell.setCellValue(element.dateOfBirth);
-			dateOfBirthCell.setCellStyle(dateCellStyle);
-
-			row.createCell(3).setCellValue(element.salary);
+			String dirName = "";
+			
+			row.createCell(2).setCellValue("Test User name");
 		}
 
 		// Resize all columns to fit the content size
